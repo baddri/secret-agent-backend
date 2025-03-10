@@ -1,0 +1,30 @@
+[package]
+name = "secret-agent"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+path = "src/main.rs"
+name = "secret-agent"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+axum = { version = "0.8.1" }
+surrealdb = { version = "2" }
+serde = { version = "1" }
+serde_json = { version = "1" }
+config = { version = "0.15" }
+dotenvy = { version = "0.15" }
+secrecy = { version = "0.10", features = ["serde"] }
+anyhow = { version = "1" }
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+tower = { version = "0.5" }
+http = { version = "1.2" }
+uuid = { version = "1" }
+
+# Tracing related
+tracing = { version = "0.1", features = ["log"] }
+tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }

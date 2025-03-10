@@ -1,0 +1,30 @@
+# Rust-specific
+/target/
+**/*.rs.bk
+# Cargo.lock           # Cargo's lock file (only if you don't want to commit it, useful for libraries)
+*.rs.bk
+
+# Rust dependencies (only ignore if you want to avoid tracking them)
+# **/Cargo.lock
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+*.out
+
+# Build-specific files
+*.dSYM
+*.tar.gz
+
+# Environment
+.env
