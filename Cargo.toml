@@ -2,6 +2,7 @@
 name = "secret-agent"
 version = "0.1.0"
 edition = "2024"
+authors = ["baddri"]
 
 [lib]
 path = "src/lib.rs"
@@ -12,9 +13,9 @@ name = "secret-agent"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-axum = { version = "0.8.1" }
+axum = { version = "0.8.1", features = ["macros"] }
 surrealdb = { version = "2" }
-serde = { version = "1" }
+serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 config = { version = "0.15" }
 dotenvy = { version = "0.15" }
@@ -24,7 +25,12 @@ tower-http = { version = "0.6", features = ["cors", "trace"] }
 tower = { version = "0.5" }
 http = { version = "1.2" }
 uuid = { version = "1" }
+once_cell = { version = "1" }
+http-body-util = { version = "0.1" }
+async-trait = { version = "0.1" }
 
 # Tracing related
 tracing = { version = "0.1", features = ["log"] }
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
+
+[dev-dependencies]

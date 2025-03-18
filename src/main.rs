@@ -20,7 +20,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let db = start_database(&config.database).await?;
 
-    startup::run_server(listener, db, config).await?;
+    let app = startup::build_app(db, config)?;
+    axum::serve(listener, app).await?;
 
     Ok(())
 }

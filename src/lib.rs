@@ -1,7 +1,13 @@
+pub mod error;
+pub mod routes;
 pub mod settings;
 pub mod startup;
 pub mod utils;
 
+use std::sync::Arc;
+
+use axum::{extract::FromRequest, response::IntoResponse};
+use error::AppError;
 pub use settings::*;
 
 use anyhow::Result;
@@ -18,6 +24,21 @@ use tracing_subscriber::{
     fmt::{self, MakeWriter},
     layer::SubscriberExt,
 };
+
+#[derive(FromRequest)]
+#[from_request(via(axum::Json), rejection(AppError))]
+pub struct AppJson<T>(T);
+
+impl<T> IntoResponse for AppJson<T>
+where
+    axum::Json<T>: IntoResponse,
+{
+    fn into_response(self) -> axum::response::Response {
+        axum::Json(self.0).into_response()
+    }
+}
+
+pub type DbState = Arc<Surreal<Client>>;
 
 pub async fn start_database(config: &DatabaseSettings) -> Result<Surreal<Client>> {
     let db = Surreal::new::<Ws>(config.get_url()).await?;
