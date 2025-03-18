@@ -13,7 +13,9 @@ name = "secret-agent"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-axum = { version = "0.8.1", features = ["macros"] }
+futures = { version = "0.3" }
+axum = { version = "0.8.1", features = ["macros", "ws"] }
+axum-extra = { version = "0.10", features = ["typed-header"] }
 surrealdb = { version = "2" }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }

@@ -1,10 +1,18 @@
 use crate::{
-    routes::common::{health_check, server_info},
+    routes::{
+        common::{health_check, server_info},
+        ws::ws_handler,
+    },
     settings::Settings,
 };
 use anyhow::Result;
 use axum::{
-    Router, body::Body, extract::MatchedPath, http::Request, response::Response, routing::get,
+    Router,
+    body::Body,
+    extract::MatchedPath,
+    http::Request,
+    response::Response,
+    routing::{any, get},
 };
 use std::{sync::Arc, time::Duration};
 use surrealdb::{Surreal, engine::remote::ws::Client};
@@ -60,6 +68,7 @@ pub fn build_app(db: Surreal<Client>, config: Settings) -> Result<Router> {
 
     let app = Router::new()
         .route("/", get(server_info))
+        .route("/ws", any(ws_handler))
         .route("/health", get(health_check))
         .layer(trace_layer)
         .layer(cors_layer)
