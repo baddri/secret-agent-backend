@@ -6,6 +6,7 @@ use http_body_util::BodyExt;
 use once_cell::sync::Lazy;
 use serde_json::Value;
 use std::env;
+use std::net::{Ipv4Addr, SocketAddr};
 use tracing::Level;
 use uuid::Uuid;
 
@@ -39,6 +40,29 @@ pub async fn spawn_server() -> Router {
         .expect("failed to start database");
     let app = build_app(db, config).expect("failed to build router");
     app
+}
+
+pub async fn spawn_server_e2e() -> SocketAddr {
+    load_env();
+
+    Lazy::force(&TRACING);
+
+    let mut config = get_configuration().expect("failed to get configuration.");
+    config.database.namespace = "e2e_tests".to_string();
+    config.database.name = Uuid::now_v7().to_string();
+    let db = start_database(&config.database)
+        .await
+        .expect("failed to start database");
+    let app = build_app(db, config).expect("failed to build router");
+
+    let listener = tokio::net::TcpListener::bind(SocketAddr::from((Ipv4Addr::UNSPECIFIED, 0)))
+        .await
+        .unwrap();
+    let addr = listener.local_addr().unwrap();
+
+    tokio::spawn(axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>()).into_future());
+
+    addr
 }
 
 #[async_trait]

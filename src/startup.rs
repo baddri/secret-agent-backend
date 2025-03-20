@@ -43,7 +43,7 @@ pub fn build_app(db: Surreal<Client>, config: Settings) -> Result<Router> {
             tracing::info!("<- HTTP Request");
         })
         .on_response(|res: &Response, latency: Duration, _span: &Span| {
-            let res_status = res.status().canonical_reason().unwrap();
+            let res_status = res.status().to_string();
 
             if res.status().is_redirection() {
                 let location = res.headers().get("Location").unwrap().to_str().unwrap();
@@ -60,7 +60,7 @@ pub fn build_app(db: Surreal<Client>, config: Settings) -> Result<Router> {
             |error: ServerErrorsFailureClass, _latency: Duration, _span: &Span| {
                 let err_message = match error {
                     ServerErrorsFailureClass::Error(message) => message,
-                    _ => "snap! something happened".into(),
+                    _ => "snap! something break".into(),
                 };
                 tracing::error!(err_message);
             },

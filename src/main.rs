@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{net::SocketAddr, str::FromStr};
 
 use secret_agent::{get_subscriber, init_subscriber, settings, start_database, startup, utils};
 use tracing::Level;
@@ -21,7 +21,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db = start_database(&config.database).await?;
 
     let app = startup::build_app(db, config)?;
-    axum::serve(listener, app).await?;
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await?;
 
     Ok(())
 }

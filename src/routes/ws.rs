@@ -20,12 +20,13 @@ pub async fn ws_handler(
     };
 
     tracing::info!("{user_agent} at {addr} connected.");
-    ws.on_upgrade(|socket| {
+    ws.on_upgrade(move |socket| {
         let (write, read) = socket.split();
         handle_socket(write, read)
     })
 }
 
+#[tracing::instrument(skip_all)]
 pub async fn handle_socket<W, R>(mut write: W, mut read: R)
 where
     W: Sink<Message> + Unpin,
